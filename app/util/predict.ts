@@ -1,5 +1,5 @@
 // utils.ts
-export const postData = async (data: any) => {
+export const postData = async (data: { [k: string]: string; }) => {
     const url = "http://ec2-18-192-24-192.eu-central-1.compute.amazonaws.com:3030/predict";
   
     try {
