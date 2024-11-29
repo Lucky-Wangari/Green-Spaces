@@ -131,21 +131,27 @@ const InputData = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
-      // Send formData to backend as is because it's already processed
+      // Assuming postData returns the predicted category and score
       const response = await postData(formData);
-      console.log({response});
-      
-      // Redirect to the results page after submission
-      router.push('/results'); // Adjust this path if needed
-
+      console.log({ response });
+  
+      const { predicted_green_space_need_category, predicted_green_space_need_score } = response;
+  
+      console.log({
+        predicted_green_space_need_category, predicted_green_space_need_score
+      });
+  
+      // Redirect to the results page with the predicted data in query parameters
+      router.push(`/results?category=${predicted_green_space_need_category}&score=${predicted_green_space_need_score}`);
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("There was an error processing your request. Please try again.");
     }
   };
-
+  
+  
   return (
     <div 
       className="relative flex flex-col items-center justify-center bg-cover bg-center"
@@ -224,11 +230,11 @@ const InputData = () => {
               type="text"
             />
           </div>
-
+ 
           <div className="flex justify-center">
             <button
               type="submit"
-              className="text-white bg-[#0A7334] hover:bg-green-700 font-semibold py-2 px-6 rounded-md"
+              className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-full"
             >
               Submit
             </button>

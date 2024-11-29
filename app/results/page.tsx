@@ -1,39 +1,34 @@
-'use client';
-
+'use client'
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image'; // Importing Next.js Image component
-import { getPredictionResults } from '../util/predict';
+import Image from 'next/image'; 
+import { useSearchParams } from 'next/navigation';
 
 // Define the type for the prediction results
 interface PredictionResults {
   predicted_green_space_need_category: string;
   predicted_green_space_need_score: number;
-  error?: string; // Optional error field
+  error?: string; 
 }
 
 const Results = () => {
-  // State management
   const [resultData, setResultData] = useState<PredictionResults | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const score = searchParams.get('score');
+
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        // Call the prediction function and handle response
-        const data: PredictionResults = await getPredictionResults();
-
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setResultData(data);
-        }
-      } catch {
-        setError('Error fetching prediction results.');
-      }
-    };
-
-    fetchResults();
-  }, []);
+    if (category && score) {
+      const resultData: PredictionResults = {
+        predicted_green_space_need_category: category,
+        predicted_green_space_need_score: parseFloat(score),
+      };
+      setResultData(resultData);
+    } else {
+      setError('Missing required query parameters.');
+    }
+  }, [category, score]);
 
   return (
     <div
@@ -56,9 +51,9 @@ const Results = () => {
             <Image
               src="/images/Vector.png"
               alt="Vector Icon"
-              width={90}  // You can modify the width here
-              height={90} // And modify the height here
-              className="object-contain mb-4" // Optional: Use Tailwind for controlling object fit
+              width={90}
+              height={90}
+              className="object-contain mb-4"
             />
             <h3 className="text-2xl font-bold">Green Space Need Score</h3>
           </div>
@@ -67,9 +62,9 @@ const Results = () => {
             <Image
               src="/images/Group.png"
               alt="Group Icon"
-              width={90}  // Ensure consistent icon size
-              height={90} // Matching the width for uniformity
-              className="object-contain mb-4" // Optional: object-contain will prevent image stretching
+              width={90}
+              height={90}
+              className="object-contain mb-4"
             />
             <h3 className="text-2xl font-bold mt-4">Categorized Level</h3>
           </div>
@@ -90,7 +85,6 @@ const Results = () => {
             </h3>
           </div>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
       </div>
     </div>
   );

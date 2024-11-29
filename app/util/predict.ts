@@ -23,30 +23,3 @@ export const postData = async (data: { [k: number | string]: number| string; }) 
     }
   };
   
-  
-
-
-
-  
-  export const getPredictionResults = async () => {
-  try {
-    const response = await fetch(
-      "http://ec2-18-192-24-192.eu-central-1.compute.amazonaws.com:3030/predict",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    return { error: (error as Error).message };
-  }
-};
