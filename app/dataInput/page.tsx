@@ -5,28 +5,28 @@ import { postData } from "../util/predict";
 
 // Type definition for formData state
 interface FormData {
-  [x: string]: string;
-  population_density_band_1_mean_value: string;
-  population_density_band_2_mean_value: string;
-  population_density_band_3_mean_value: string;
-  air_quality_so2_band_1_mean_value: string;
-  air_quality_so2_band_2_mean_value: string;
-  air_quality_so2_band_3_mean_value: string;
-  air_quality_no2_band_1_mean_value: string;
-  air_quality_no2_band_2_mean_value: string;
-  air_quality_no2_band_3_mean_value: string;
-  aai_band_1_mean_value: string;
-  aai_band_2_mean_value: string;
-  aai_band_3_mean_value: string;
-  rainfall_band_1_mean_value: string;
-  rainfall_band_2_mean_value: string;
-  rainfall_band_3_mean_value: string;
-  ndvi_band_1_mean_value: string;
-  ndvi_band_2_mean_value: string;
-  ndvi_band_3_mean_value: string;
-  lst_band_1_mean_value: string;
-  lst_band_2_mean_value: string;
-  lst_band_3_mean_value: string;
+  [x: string]: number | string;
+  population_density_band_1_mean_value: number;
+  population_density_band_2_mean_value: number;
+  population_density_band_3_mean_value: number;
+  air_quality_so2_band_1_mean_value: number;
+  air_quality_so2_band_2_mean_value: number;
+  air_quality_so2_band_3_mean_value: number;
+  air_quality_no2_band_1_mean_value: number;
+  air_quality_no2_band_2_mean_value: number;
+  air_quality_no2_band_3_mean_value: number;
+  aai_band_1_mean_value: number;
+  aai_band_2_mean_value: number;
+  aai_band_3_mean_value: number;
+  rainfall_band_1_mean_value: number;
+  rainfall_band_2_mean_value: number;
+  rainfall_band_3_mean_value: number;
+  ndvi_band_1_mean_value: number;
+  ndvi_band_2_mean_value: number;
+  ndvi_band_3_mean_value: number;
+  lst_band_1_mean_value: number;
+  lst_band_2_mean_value: number;
+  lst_band_3_mean_value: number;
   ward: string;
 }
 
@@ -36,13 +36,13 @@ const InputField = ({
   name,
   value,
   onChange,
-  type = "text"
+  type = "number",
 }: {
-  label: string;
+  label: string | number;
   name: string;
-  value: string;
+  value: number | string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
+  type?: "text" | "number"; // type can be "text" or "number"
 }) => (
   <div className="flex-1">
     <label className="block text-sm font-medium text-gray-700">
@@ -63,7 +63,7 @@ const SelectField = ({
   name,
   value,
   onChange,
-  options
+  options,
 }: {
   label: string;
   name: string;
@@ -93,81 +93,55 @@ const SelectField = ({
 
 const InputData = () => {
   const [formData, setFormData] = useState<FormData>({
-    population_density_band_1_mean_value: '',
-    population_density_band_2_mean_value: '',
-    population_density_band_3_mean_value: '',
-    air_quality_so2_band_1_mean_value: '',
-    air_quality_so2_band_2_mean_value: '',
-    air_quality_so2_band_3_mean_value: '',
-    air_quality_no2_band_1_mean_value: '',
-    air_quality_no2_band_2_mean_value: '',
-    air_quality_no2_band_3_mean_value: '',
-    aai_band_1_mean_value: '',
-    aai_band_2_mean_value: '',
-    aai_band_3_mean_value: '',
-    rainfall_band_1_mean_value: '',
-    rainfall_band_2_mean_value: '',
-    rainfall_band_3_mean_value: '',
-    ndvi_band_1_mean_value: '',
-    ndvi_band_2_mean_value: '',
-    ndvi_band_3_mean_value: '',
-    lst_band_1_mean_value: '',
-    lst_band_2_mean_value: '',
-    lst_band_3_mean_value: '',
-    ward: '',
+    population_density_band_1_mean_value: 0,
+    population_density_band_2_mean_value: 0,
+    population_density_band_3_mean_value: 0,
+    air_quality_so2_band_1_mean_value: 0,
+    air_quality_so2_band_2_mean_value: 0,
+    air_quality_so2_band_3_mean_value: 0,
+    air_quality_no2_band_1_mean_value: 0,
+    air_quality_no2_band_2_mean_value: 0,
+    air_quality_no2_band_3_mean_value: 0,
+    aai_band_1_mean_value: 0,
+    aai_band_2_mean_value: 0,
+    aai_band_3_mean_value: 0,
+    rainfall_band_1_mean_value: 0,
+    rainfall_band_2_mean_value: 0,
+    rainfall_band_3_mean_value: 0,
+    ndvi_band_1_mean_value: 0,
+    ndvi_band_2_mean_value: 0,
+    ndvi_band_3_mean_value: 0,
+    lst_band_1_mean_value: 0,
+    lst_band_2_mean_value: 0,
+    lst_band_3_mean_value: 0,
+    ward: "", // Ward should be a string
   });
 
-  const router = useRouter();
+  const router = useRouter(); // Initialize the useRouter hook to navigate
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    
+    // Update form data: process numerical fields as numbers, 'ward' remains a string
     setFormData({
       ...formData,
-      [name]: value
+      [name]: type === "number" ? parseFloat(value) || 0 : value, // If it's a number input, parse it as float
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    // Trim any potential leading/trailing spaces and log the formData to ensure it's updated correctly
-    const trimmedFormData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => [key, value.trim()])
-    );
-  
-    console.log("Trimmed Form Data:", trimmedFormData);
-  
-    // Validate form data before submission
-    const emptyFields = Object.values(trimmedFormData).some((value) => value === "");
-  
-    if (emptyFields) {
-      alert("Please fill in all fields before submitting.");
-      return;
-    }
-  
-    // Log the formData to ensure it is correctly structured
-    console.log("Form data being submitted:", trimmedFormData);
-  
+
     try {
-      // Sending data to the backend
-      const response = await postData(trimmedFormData);
-  
-      // Check if the response is successful
-      if (response && response.status === 200) {
-        console.log("Response from backend:", response);
-  
-        // Store response in localStorage for the results page
-        localStorage.setItem('resultData', JSON.stringify(response.data));
-  
-        // Navigate to the results page
-        router.push('/results');
-      } else {
-        alert("Unexpected response from server. Please try again later.");
-      }
+      // Send formData to backend as is because it's already processed
+      const response = await postData(formData);
+      console.log({response});
+      
+      // Redirect to the results page after submission
+      router.push('/results'); // Adjust this path if needed
+
     } catch (error) {
       console.error("Error submitting data:", error);
-  
-      // Show a user-friendly error message
       alert("There was an error processing your request. Please try again.");
     }
   };
@@ -224,23 +198,16 @@ const InputData = () => {
                   type="number"
                 />
                 <InputField 
-                  label={`Land Surface Temperature (Band ${band})`} 
-                  name={`lst_band_${band}_mean_value`} 
-                  value={formData[`lst_band_${band}_mean_value`]} 
-                  onChange={handleChange}
-                  type="number"
-                />
-                <InputField 
-                  label={`Aerosol Index (Band ${band})`} 
-                  name={`aai_band_${band}_mean_value`} 
-                  value={formData[`aai_band_${band}_mean_value`]} 
-                  onChange={handleChange}
-                  type="number"
-                />
-                <InputField 
                   label={`Air Quality NO2 (Band ${band})`} 
                   name={`air_quality_no2_band_${band}_mean_value`} 
                   value={formData[`air_quality_no2_band_${band}_mean_value`]} 
+                  onChange={handleChange}
+                  type="number"
+                />
+                <InputField 
+                  label={`AAI (Band ${band})`} 
+                  name={`aai_band_${band}_mean_value`} 
+                  value={formData[`aai_band_${band}_mean_value`]} 
                   onChange={handleChange}
                   type="number"
                 />
@@ -248,20 +215,20 @@ const InputData = () => {
             </div>
           ))}
 
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <SelectField 
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            <InputField 
               label="Ward" 
               name="ward" 
               value={formData.ward} 
               onChange={handleChange}
-              options={['Kibera']}
+              type="text"
             />
           </div>
 
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-[#0A7334] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-[#0A7334] focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+              className="text-white bg-[#0A7334] hover:bg-green-700 font-semibold py-2 px-6 rounded-md"
             >
               Submit
             </button>

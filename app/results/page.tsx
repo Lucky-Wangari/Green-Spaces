@@ -56,20 +56,20 @@ const Results = () => {
             <Image
               src="/images/Vector.png"
               alt="Vector Icon"
-              width={90}
-              height={90}
-              className="w-full object-contain mb-4"
+              width={90}  // You can modify the width here
+              height={90} // And modify the height here
+              className="object-contain mb-4" // Optional: Use Tailwind for controlling object fit
             />
             <h3 className="text-2xl font-bold">Green Space Need Score</h3>
           </div>
           <div className="border-white h-[200px]"></div>
           <div className="bg-[#0A7334] text-white flex flex-col items-center justify-center w-[250px]">
-          <Image
+            <Image
               src="/images/Group.png"
-              alt="Vector Icon"
-              width={90}
-              height={90}
-              className="w-full object-contain mb-4"
+              alt="Group Icon"
+              width={90}  // Ensure consistent icon size
+              height={90} // Matching the width for uniformity
+              className="object-contain mb-4" // Optional: object-contain will prevent image stretching
             />
             <h3 className="text-2xl font-bold mt-4">Categorized Level</h3>
           </div>

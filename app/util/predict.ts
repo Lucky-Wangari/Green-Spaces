@@ -1,5 +1,5 @@
 // utils.ts
-export const postData = async (data: { [k: string]: string; }) => {
+export const postData = async (data: { [k: number | string]: number| string; }) => {
     const url = "http://ec2-18-192-24-192.eu-central-1.compute.amazonaws.com:3030/predict";
   
     try {
@@ -18,7 +18,7 @@ export const postData = async (data: { [k: string]: string; }) => {
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error("Error posting data:", error);
+      console.error("Error posting data:", (error as Error).message);
       throw error;
     }
   };

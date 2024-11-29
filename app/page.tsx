@@ -14,7 +14,7 @@ const Home = () => {
 
       // After showing the title, navigate to inputData page
       setTimeout(() => {
-        router.push('/dataInput'); // Redirect to the /dataInput page
+        router.push('/dataInput'); 
       }, 3000); // Wait 1 second after showing the title before navigation
     }, 1000);
 

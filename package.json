@@ -27,6 +27,5 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "proxy": "http://ec2-18-192-24-192.eu-central-1.compute.amazonaws.com:3030"
+  }
 }
