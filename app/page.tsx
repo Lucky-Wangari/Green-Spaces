@@ -1,30 +1,32 @@
 'use client';
-
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
-
+import { useRouter } from "next/navigation";
 const Home = () => {
   const [showTitle, setShowTitle] = useState(false);
-  const router = useRouter(); // Initialize router
-
+  const [isExiting, setIsExiting] = useState(false); // Track the exit animation state
+  const router = useRouter();
   useEffect(() => {
-    // Set a timer to show the title after 3 seconds and navigate
-    const timer = setTimeout(() => {
+    // Show the title after 1 second
+    const titleTimer = setTimeout(() => {
       setShowTitle(true);
-
-      // After showing the title, navigate to inputData page
-      setTimeout(() => {
-        router.push('/dataInput'); 
-      }, 3000); // Wait 1 second after showing the title before navigation
+      // Trigger fade-out and navigation after showing the title
+      const exitTimer = setTimeout(() => {
+        setIsExiting(true);
+        // Navigate to dataInput page after the fade-out animation
+        setTimeout(() => {
+          router.push('/dataInput');
+        }, 1000); // Ensure this matches the fade-out duration
+      }, 3000); // Wait 3 seconds before initiating fade-out
+      return () => clearTimeout(exitTimer);
     }, 1000);
-
-    // Clean up the timer on component unmount
-    return () => clearTimeout(timer);
+    // Clean up the title timer on component unmount
+    return () => clearTimeout(titleTimer);
   }, [router]);
-
   return (
     <div
-      className="relative flex justify-center items-center"
+      className={`relative flex justify-center items-center ${
+        isExiting ? 'fade-out' : 'fade-in'
+      }`}
       style={{
         height: "100vh",
         backgroundImage: "url('/images/Background-Image.png')", // Ensure the image path is correct
@@ -48,15 +50,20 @@ const Home = () => {
               fontWeight: 900,
               color: "white", // White text color
               textShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add slight shadow for better readability
-              animation: "fadeIn 3s ease-in-out", // Optional: Fade-in animation
             }}
           >
-            Urban <br/> <br/>  <br/> Green <br/> <br/> <br/> Spaces
+            Urban <br /> <br /> <br /> Green <br /> <br /> <br /> Spaces
           </h1>
         </div>
       )}
     </div>
   );
 };
-
 export default Home;
+
+
+
+
+
+
+
